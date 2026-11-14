@@ -54,9 +54,9 @@ function commentsHtml(n, cls) {
     return `<div class="comment${multi ? ' multi' : ''} ${cls || ''}" lang="${D.editions[c.ed].lang}"><div class="ch">${esc(head)}</div>${renderMd(c.text, c.ed)}</div>`;
   }).join('');
 }
-function railList(arr, label) {
+function railList(arr, label, href) {
   if (!arr || !arr.length) return '';
-  return `<div><h4>${label}</h4><ul>${arr.map(n => `<li><a class="no" href="#/p/${n}">${n}</a><span class="tx">${esc(firstLine(n, lead()))}</span></li>`).join('')}</ul></div>`;
+  return `<div><h4>${href ? `<a href="${href}" title="${esc(t('list.open'))}">${label}</a>` : label}</h4><ul>${arr.map(n => `<li><a class="no" href="#/p/${n}">${n}</a><span class="tx">${esc(firstLine(n, lead()))}</span></li>`).join('')}</ul></div>`;
 }
 function colHead() { return `<div class="colhead cols" style="${gridCols(SHOWN.length)}">${SHOWN.map(ed => `<div>${esc(D.editions[ed].title)}</div>`).join('')}</div>`; }
 
@@ -69,7 +69,7 @@ function showProp(n) {
   const crumbs = ancestors(n).map(a => `<a href="#/p/${a}" title="${esc(firstLine(a, lead()))}">${a}</a><span class="sep">›</span>`).join('') + `<b>${n}</b>`;
   const groups = (p.groups || []).map((g, gi) => (p.groups.length > 1 ? `<div class="gl">${t('prop.group', {g: gi + 1})}: ${g[0]}${g.length > 1 ? '–' + g[g.length - 1] : ''}</div>` : '') +
     `<ul>${g.map(c => `<li><a class="no" href="#/p/${c}">${c}</a><span class="tx">${esc(firstLine(c, lead()))}</span></li>`).join('')}</ul>`).join('');
-  const sib = p.parent ? (D.props[p.parent].groups.find(g => g.includes(n)) || []).filter(x => x !== n) : NUMS.filter(x => !D.props[x].parent && x !== n);
+  const sib = branchOf(n).filter(x => x !== n);
   document.title = `${n} — ${t('app.title')}`;
   view.innerHTML = `<div class="page">
     <div class="crumbs" title="${esc(t('prop.ancestors'))}">${crumbs}</div>
@@ -82,10 +82,10 @@ function showProp(n) {
     ${commentsHtml(n)}
     ${noteBox(n)}
     <div class="rail">
-      ${groups ? `<div><h4>${t('prop.children')}</h4>${groups}</div>` : ''}
-      ${railList(sib, t('prop.siblings'))}
-      ${railList(p.refs, t('prop.refs'))}
-      ${railList(REFS_IN[n], t('prop.refs_in'))}
+      ${groups ? `<div><h4><a href="#/p/${n}/kids" title="${esc(t('list.open'))}">${t('prop.children')}</a></h4>${groups}</div>` : ''}
+      ${railList(sib, t('prop.siblings'), `#/p/${n}/branch`)}
+      ${railList(p.refs, t('prop.refs'), `#/p/${n}/refs`)}
+      ${railList(REFS_IN[n], t('prop.refs_in'), `#/p/${n}/refsin`)}
       ${setsOf(n)}
     </div>
     <div class="pager"><span>${prev ? `<a href="#/p/${prev}">← ${prev} ${t('prop.prev')}</a>` : ''}</span>
@@ -98,6 +98,38 @@ function showProp(n) {
   view.scrollTop = 0;
   decorate(view);
   scrollToMark();
+}
+/* ветвь положения: его группа у родителя (для 1–7 — сами корни) */
+function branchOf(n) {
+  const p = D.props[n];
+  return p.parent ? (D.props[p.parent].groups.find(g => g.includes(n)) || [n]) : NUMS.filter(x => !D.props[x].parent);
+}
+
+/* ---------- перечни положения отдельной страницей: комментарии, ветвь, ссылки ---------- */
+function showList(n, kind) {
+  if (!D.props[n]) { showProp(n); return; }
+  CUR = n; revealInNav(n);
+  const p = D.props[n];
+  let head = [], groups = [];
+  if (kind === 'kids') { head = [n]; groups = (p.groups || []).map((g, gi) => [p.groups.length > 1 ? t('prop.group', {g: gi + 1}) : '', g]); }
+  else if (kind === 'branch') { head = p.parent ? [p.parent] : []; groups = [['', branchOf(n)]]; }
+  else if (kind === 'refs') { head = [n]; groups = [['', p.refs || []]]; }
+  else { head = [n]; groups = [['', REFS_IN[n] || []]]; }
+  const title = {kids: 'prop.children', branch: 'prop.siblings', refs: 'prop.refs', refsin: 'prop.refs_in'}[kind];
+  const tabs = [['kids', (p.groups || []).length], ['branch', 1], ['refs', (p.refs || []).length], ['refsin', (REFS_IN[n] || []).length]]
+    .filter(([k, c]) => c).map(([k]) => k === kind ? `<b>${t({kids: 'prop.children', branch: 'prop.siblings', refs: 'prop.refs', refsin: 'prop.refs_in'}[k])}</b>`
+      : `<a href="#/p/${n}/${k}">${t({kids: 'prop.children', branch: 'prop.siblings', refs: 'prop.refs', refsin: 'prop.refs_in'}[k])}</a>`).join(' · ');
+  document.title = `${n} — ${t(title)} — ${t('app.title')}`;
+  let h = `<div class="page"><div class="crumbs"><a href="#/p/${n}">← ${n}</a></div>
+    <h2>${t(title)}: <a href="#/p/${n}">${n}</a></h2><div class="listtabs">${tabs}</div>${cfBar()}${colHead()}`;
+  head.forEach(x => { h += rowHtml(x, 'rep', false); });
+  groups.forEach(([label, g]) => {
+    if (label) h += `<div class="gl">${esc(label)}: ${g[0]}${g.length > 1 ? '–' + g[g.length - 1] : ''}</div>`;
+    g.forEach(x => { h += rowHtml(x, x === n && kind === 'branch' ? 'cur' : '', true); });
+  });
+  view.innerHTML = h + '</div>';
+  wireCfBar(); decorate(view);
+  view.scrollTop = 0;
 }
 function copyProp(n) {
   copyText(SHOWN.filter(ed => D.props[n].text[ed]).map(ed => `${n} ${MD.plain(D.props[n].text[ed])}\n— ${cite(n, ed)}`).join('\n\n'));

@@ -17,6 +17,7 @@ async function route() {
   if (need.some(e => !LOADED.has(e))) { view.innerHTML = `<div class="loading">${t('misc.loading')}</div>`; await ensure(need); drawNav($('#filter').value.trim()); }
   let m;
   if ((m = path.match(/^\/p\/([1-7](?:\.\d+)?)$/))) showProp(m[1]);
+  else if ((m = path.match(/^\/p\/([1-7](?:\.\d+)?)\/(kids|branch|refs|refsin)$/))) showList(m[1], m[2]);
   else if (path === '/tree') showTree(params.get('at'));
   else if (path === '/seq') showSeq(params.get('at'));
   else if (path === '/map') showMap(params.get('at'), params.get('mode'));

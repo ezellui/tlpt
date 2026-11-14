@@ -56,6 +56,7 @@ window.I18N = {
     'prop.children': {ru: 'Комментарии к положению (ветви)', de: 'Kommentare zum Satz (Zweige)', en: 'Comments on this proposition (branches)'},
     'prop.group': {ru: 'ветвь {g}', de: 'Zweig {g}', en: 'branch {g}'},
     'prop.siblings': {ru: 'В той же ветви', de: 'Im selben Zweig', en: 'In the same branch'},
+    'list.open': {ru: 'Открыть перечень отдельной страницей — с полными текстами', de: 'Liste als eigene Seite öffnen — mit vollen Texten', en: 'Open the list as a page of its own, with full texts'},
     'prop.refs': {ru: 'Ссылки', de: 'Verweise', en: 'References'},
     'prop.refs_in': {ru: 'Ссылаются сюда', de: 'Verweise hierher', en: 'Referred to from'},
     'prop.prev': {ru: 'предыдущее', de: 'vorheriger', en: 'previous'},
