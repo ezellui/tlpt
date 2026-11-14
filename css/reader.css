@@ -1,0 +1,223 @@
+/* reader.css — оформление читалки «Трактата» (палитра и переменные — как в читалке HWPh) */
+:root{
+  --paper:#F2F3EF; --paper-2:#E7E9E3; --ink:#1D2320; --ink-2:#56605A; --rule:#CDD2CA;
+  --cloth:#2E5A43; --cloth-ink:#F2F3EF; --brass:#8A6A22; --mark:#E6E09A; --mark-cur:#D4C24E;
+  --link:#245A70; --fig:#FFFFFF;
+  --serif:"Palatino Linotype","Book Antiqua",Palatino,Cambria,"Times New Roman",serif;
+  --sans:"Segoe UI",Tahoma,"Helvetica Neue",Arial,sans-serif;
+  --fs:18px;
+}
+:root[data-theme="dark"]{
+  --paper:#1B201D; --paper-2:#232A26; --ink:#DADFD6; --ink-2:#9AA59C; --rule:#35403A;
+  --cloth:#2F5E47; --cloth-ink:#E9EEE6; --brass:#C9A95A; --mark:#5C5A26; --mark-cur:#8C8327;
+  --link:#8CC0D6; --fig:#E9ECE6;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink)}
+body{font-family:var(--serif);font-size:var(--fs);line-height:1.55;display:flex;flex-direction:column}
+a{color:var(--link);text-decoration:none} a:hover{text-decoration:underline}
+button,select,input{font-family:var(--sans);font-size:13px}
+#bar{display:flex;flex-wrap:wrap;gap:5px 8px;align-items:center;padding:7px 12px;background:var(--cloth);color:var(--cloth-ink);font-family:var(--sans);font-size:13px}
+#bar .brand{font-weight:600;letter-spacing:.02em;margin-right:6px;color:var(--cloth-ink)}
+#bar button{background:transparent;color:var(--cloth-ink);border:1px solid rgba(255,255,255,.35);border-radius:3px;padding:2px 7px;cursor:pointer}
+#bar button.on{background:rgba(255,255,255,.18)}
+#bar select{background:var(--paper);color:var(--ink);border:0;border-radius:3px;padding:2px 4px}
+#qwrap{flex:0 1 230px;min-width:120px}
+#q{width:100%;padding:4px 8px;border:0;border-radius:3px;background:var(--paper);color:var(--ink)}
+.eds{display:flex;gap:4px;align-items:center}
+.eds label{border:1px solid rgba(255,255,255,.35);border-radius:3px;padding:1px 5px;cursor:pointer;user-select:none;font-size:12px}
+.eds label.on{background:rgba(255,255,255,.22)}
+.eds input{display:none}
+#main{flex:1;display:flex;min-height:0}
+#nav{width:290px;flex:none;border-right:1px solid var(--rule);display:flex;flex-direction:column;background:var(--paper-2);font-family:var(--sans);font-size:13px}
+#nav.hidden{display:none}
+#nav .top{padding:8px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--rule)}
+#nav .top input{flex:1;min-width:0;padding:3px 6px;border:1px solid var(--rule);border-radius:3px;background:var(--paper);color:var(--ink)}
+#nav .top button{border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:3px;cursor:pointer;padding:2px 6px}
+#tree{overflow:auto;flex:1;padding:4px 0 30px}
+.tn{display:flex;align-items:baseline;gap:4px;padding:1px 8px 1px 0;cursor:pointer;white-space:nowrap}
+.tn:hover{background:var(--paper)}
+.tn.cur{background:var(--mark)}
+.tn .tw{width:14px;flex:none;text-align:center;color:var(--ink-2);font-size:10px}
+.tn .no{color:var(--brass);font-weight:600;flex:none}
+.tn .tx{overflow:hidden;text-overflow:ellipsis;color:var(--ink-2)}
+.tn.grp .tx{font-style:italic}
+.tsub{display:none} .tsub.open{display:block}
+#nav .front{padding:6px 10px;border-top:1px solid var(--rule)}
+#view{flex:1;overflow:auto;min-width:0}
+.page{max-width:1500px;margin:0 auto;padding:18px 26px 80px}
+.narrow{max-width:46em}
+h1,h2,h3{font-weight:normal;line-height:1.25}
+h2{font-size:1.45em;margin:.4em 0 .5em}
+.crumbs{font-family:var(--sans);font-size:13px;color:var(--ink-2);margin-bottom:10px;display:flex;flex-wrap:wrap;gap:2px 6px;align-items:baseline}
+.crumbs a{color:var(--brass);font-weight:600}
+.crumbs .sep{opacity:.5}
+.cols{display:grid;gap:0 22px}
+.cell{min-width:0}
+.cell .edh{font-family:var(--sans);font-size:11.5px;color:var(--ink-2);border-bottom:1px solid var(--rule);margin-bottom:4px;display:flex;justify-content:space-between;gap:8px}
+.cell .miss{font-style:italic;color:var(--ink-2);font-size:.9em}
+.cell p{margin:.35em 0}
+.pnum{font-family:var(--sans);font-weight:700;color:var(--brass);font-size:1.6em;margin-right:.4em}
+.prop-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.acts{font-family:var(--sans);font-size:12.5px;display:flex;gap:12px;flex-wrap:wrap;margin-left:auto}
+.acts a,.acts button{cursor:pointer;background:none;border:0;color:var(--link);padding:0;font-size:12.5px}
+.comment{margin:14px 0 0;padding:8px 14px;border-left:3px solid var(--brass);background:var(--paper-2);font-size:.92em}
+.comment .ch{font-family:var(--sans);font-size:11.5px;color:var(--brass);font-weight:600;margin-bottom:2px}
+.comment.multi{border-left-style:double;border-left-width:4px}
+.rail{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px 26px;margin-top:22px;padding-top:12px;border-top:1px solid var(--rule);font-size:.88em}
+.rail h4{font-family:var(--sans);font-size:12px;color:var(--ink-2);margin:0 0 4px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.rail ul{list-style:none;margin:0;padding:0}
+.rail li{margin:3px 0;display:flex;gap:6px}
+.rail li .no{font-family:var(--sans);font-weight:600;color:var(--brass);flex:none;min-width:4.2em}
+.rail li .tx{color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.rail .gl{font-family:var(--sans);font-size:11px;color:var(--ink-2);margin:8px 0 2px}
+.pager{display:flex;justify-content:space-between;font-family:var(--sans);font-size:13px;margin-top:26px;padding-top:10px;border-top:1px solid var(--rule)}
+/* дерево и сплошной текст */
+.row{display:grid;gap:0 22px;padding:2px 0}
+.row .cell p:first-child{margin-top:0}
+.row .n{font-family:var(--sans);font-weight:600;color:var(--brass);margin-right:.35em;font-size:.85em;cursor:pointer}
+.row.rep .cell{font-weight:700}
+.row.rep{margin-top:1.1em}
+.row.rep .n{font-weight:800}
+.row.cur{background:var(--mark)}
+.sec{font-size:1.25em;margin:1.8em 0 .5em;padding-top:.6em;border-top:2px solid var(--rule)}
+.sec .n{font-family:var(--sans);font-weight:700;color:var(--brass);margin-right:.4em}
+.sec.row .cell{font-weight:600}
+.colhead{position:sticky;top:0;background:var(--paper);z-index:2;font-family:var(--sans);font-size:12px;color:var(--ink-2);border-bottom:1px solid var(--rule);padding:4px 0;margin-bottom:6px}
+.comment.inrow{margin:6px 0 10px}
+.tree-note{font-family:var(--sans);font-size:13px;color:var(--ink-2);margin-bottom:12px}
+/* формулы, таблицы, схемы */
+.tbl{overflow-x:auto;margin:.4em 1.2em .4em 0;display:inline-block;vertical-align:top;max-width:100%} table{border-collapse:collapse;font-size:.88em}
+td,th{border:1px solid var(--rule);padding:1px 7px;text-align:center}
+td:nth-child(3),td:nth-child(4){text-align:left}
+pre.scheme{font-size:.8em;line-height:1.25;overflow-x:auto;background:var(--paper-2);padding:6px 8px}
+figure{margin:.5em 0} figure img{max-width:100%;max-height:340px}
+/* схемы: встроенный SVG, цвет — цвет текста, фон прозрачный */
+.vec{display:inline-block;max-width:100%;color:var(--ink);line-height:0}
+.vec svg{max-width:100%;height:auto;overflow:visible}
+.md-display{overflow-x:auto;margin:.3em 0}
+sup.fn a{font-family:var(--sans);font-size:.75em;color:var(--brass);cursor:pointer}
+mark{background:var(--mark);color:inherit;border-radius:2px}
+mark.cur{background:var(--mark-cur)}
+#pop{position:fixed;z-index:20;max-width:440px;background:var(--paper);border:1px solid var(--rule);box-shadow:0 4px 18px rgba(0,0,0,.18);padding:8px 12px;font-size:14px;display:none;border-radius:4px}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--cloth);color:var(--cloth-ink);padding:6px 14px;border-radius:4px;font-family:var(--sans);font-size:13px;display:none;z-index:30}
+.hits{list-style:none;padding:0;margin:0}
+.hits li{padding:8px 0;border-bottom:1px solid var(--rule)}
+.hits .meta{font-family:var(--sans);font-size:12px;color:var(--ink-2)}
+.hits .meta b{color:var(--brass)}
+.help{font-family:var(--sans);font-size:13px;color:var(--ink-2)}
+.opts{font-family:var(--sans);font-size:13px;display:flex;gap:14px;flex-wrap:wrap;margin:6px 0 12px}
+.ednote{font-size:.9em;color:var(--ink-2)}
+.map svg{width:100%;height:auto;max-height:80vh}
+.map circle{cursor:pointer}
+.map text{font-family:var(--sans);pointer-events:none}
+@media (max-width:900px){#nav{position:absolute;z-index:10;height:calc(100% - 44px);box-shadow:2px 0 10px rgba(0,0,0,.2)} .page{padding:12px}}
+@media print{#bar,#nav,.acts,.rail,.pager{display:none!important} #view{overflow:visible} body{display:block}}
+
+/* ---------- вкладки видов ---------- */
+#tabs{display:flex;gap:2px;align-items:stretch}
+#tabs a{color:var(--cloth-ink);padding:2px 7px;border-radius:3px;border:1px solid transparent;white-space:nowrap}
+#tabs a:hover{text-decoration:none;border-color:rgba(255,255,255,.35)}
+#tabs a.on{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.35)}
+#bar .sp{flex:1}
+.loading{font-family:var(--sans);color:var(--ink-2);padding:30px}
+
+/* ---------- карта: ссылки между положениями ---------- */
+.map .ctl{font-family:var(--sans);font-size:13px;display:flex;gap:16px;flex-wrap:wrap;margin-bottom:6px}
+.map path.ref{fill:none;stroke:#4E8AA6;stroke-opacity:.55;stroke-width:1.2}
+.map circle.hl{stroke:var(--ink);stroke-width:2}
+
+/* ---------- пометки и цветные фильтры ---------- */
+.mk1{background:#F2E28A}.mk2{background:#B9E3B0}.mk3{background:#BCD7F2}.mk4{background:#F2BFC9}
+:root[data-theme="dark"] .mk1{background:#6B6020}:root[data-theme="dark"] .mk2{background:#2F5A2A}
+:root[data-theme="dark"] .mk3{background:#294A6B}:root[data-theme="dark"] .mk4{background:#6B2F3A}
+span.mk{border-radius:2px;cursor:pointer}
+span.cf{border-bottom:3px solid;padding-bottom:0}
+span.cf1{border-color:#D4A017}span.cf2{border-color:#2E9E5B}span.cf3{border-color:#3B7DD8}span.cf4{border-color:#D2405F}
+#seltool{position:fixed;z-index:25;display:none;background:var(--paper);border:1px solid var(--rule);border-radius:4px;box-shadow:0 3px 12px rgba(0,0,0,.2);padding:3px;gap:3px;font-family:var(--sans);font-size:12px}
+#seltool button{border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:3px;cursor:pointer;min-width:24px;height:22px}
+#seltool button.c{border:0}
+.markcard{position:fixed;z-index:26;background:var(--paper);border:1px solid var(--rule);border-radius:4px;box-shadow:0 4px 16px rgba(0,0,0,.2);padding:8px;width:300px;font-family:var(--sans);font-size:13px}
+.markcard textarea{width:100%;min-height:4em;font:inherit;background:var(--paper);color:var(--ink);border:1px solid var(--rule)}
+.markcard .row2{display:flex;gap:6px;margin-top:6px;align-items:center}
+.markcard button{border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:3px;cursor:pointer}
+.cfbar{font-family:var(--sans);font-size:12.5px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 10px}
+.cfbar input{width:9em;padding:2px 5px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:3px}
+.cfbar .cnt{color:var(--ink-2)}
+.cfbar button{border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:3px;cursor:pointer}
+
+/* ---------- «Моё»: пометки, заметки, выборки ---------- */
+.wtabs{display:flex;gap:4px;margin-bottom:12px;font-family:var(--sans);font-size:13px;flex-wrap:wrap;align-items:center}
+.wtabs a{padding:3px 10px;border:1px solid var(--rule);border-radius:3px}
+.wtabs a.on{background:var(--paper-2);font-weight:600}
+.wtabs .sp{flex:1}
+.wtabs button,.wtabs label.btn{border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:3px;cursor:pointer;padding:2px 8px;font-size:12.5px}
+.wl{list-style:none;padding:0;margin:0}
+.wl li{padding:6px 0;border-bottom:1px solid var(--rule);display:flex;gap:10px;align-items:baseline}
+.wl .no{font-family:var(--sans);font-weight:600;color:var(--brass);min-width:4.5em}
+.wl .meta{font-family:var(--sans);font-size:12px;color:var(--ink-2)}
+.wl .del{margin-left:auto;cursor:pointer;color:var(--ink-2);background:none;border:0}
+.pnote{margin-top:14px}
+.pnote textarea{width:100%;min-height:3.2em;font:15px var(--serif);background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:3px;padding:6px}
+.pnote .lbl{font-family:var(--sans);font-size:12px;color:var(--ink-2)}
+.setmenu{position:fixed;z-index:26;background:var(--paper);border:1px solid var(--rule);border-radius:4px;box-shadow:0 4px 16px rgba(0,0,0,.2);padding:6px;font-family:var(--sans);font-size:13px;min-width:200px}
+.setmenu div{padding:3px 6px;cursor:pointer}.setmenu div:hover{background:var(--paper-2)}
+.setmenu input{width:100%;margin-top:4px}
+
+/* ---------- термины ---------- */
+.terms table{font-size:.86em;width:100%}
+.terms td,.terms th{text-align:left;vertical-align:top;padding:4px 8px}
+.terms th{font-family:var(--sans);font-size:12px;color:var(--ink-2);font-weight:600}
+.terms td.de{font-weight:600}
+.terms .r{display:inline-block;margin:0 8px 2px 0;white-space:nowrap}
+.terms .r small{font-family:var(--sans);color:var(--ink-2)}
+.terms .r.main{font-weight:600}
+.terms tr:hover td{background:var(--paper-2)}
+.terms a.t{cursor:pointer}
+.termhead{font-family:var(--sans);font-size:13px;color:var(--ink-2);margin-bottom:10px}
+.page h2::first-letter{text-transform:uppercase}
+/* текущий ряд — полоса слева, а не заливка (длинные положения) */
+.row.cur{background:none;box-shadow:-6px 0 0 var(--mark-cur)}
+td:nth-child(1),td:nth-child(2){white-space:nowrap}
+.cell table{font-size:.8em}
+
+/* аппарат изданий */
+.page.app{display:grid;grid-template-columns:230px minmax(0,1fr);gap:28px;max-width:1100px}
+.applist .ae{margin-bottom:14px}
+.applist .aeh{font:600 12px var(--sans);letter-spacing:.04em;text-transform:uppercase;color:var(--ink-2);margin-bottom:4px}
+.applist a{display:block;padding:2px 6px;border-radius:3px;text-decoration:none;color:inherit;line-height:1.35;margin:1px 0}
+.applist a.on,.applist a:hover{background:var(--paper-2)}
+.appbody{max-width:72ch}
+.appbody figure{text-align:center}
+.appbody dl.notes dt{font-weight:700;float:left;clear:left;width:3em;text-align:right;padding-right:.6em}
+.appbody dl.notes dd{margin:0 0 .8em 3.6em}
+.appbody dl.notes.small{font-size:.9em;border-top:1px solid var(--rule);padding-top:.8em;margin-top:1.5em}
+.appbody .uses{font-size:.85em;color:var(--ink-2);margin-top:.2em}
+.appbody .index{columns:2;column-gap:32px;font-size:.92em;line-height:1.4}
+.appbody .index .ie{break-inside:avoid;margin-bottom:.35em}
+.appbody .index .il{font-weight:700;margin:.6em 0 .2em;color:var(--ink-2)}
+.appbody .index .is{padding-left:1.2em;text-indent:-.6em}
+.appbody .index .is2{padding-left:2.4em}
+.appbody p.bib{margin:.2em 0;padding-left:1.5em;text-indent:-1.5em}
+a.pref{text-decoration:none;border-bottom:1px dotted currentColor}
+@media (max-width:800px){.page.app{grid-template-columns:1fr}.appbody .index{columns:1}}
+
+/* стартовая страница */
+.about .start{display:flex;gap:10px;flex-wrap:wrap;margin:1.2em 0}
+.about .btn{display:inline-block;padding:6px 14px;border:1px solid var(--rule);border-radius:4px;text-decoration:none;color:var(--ink);background:var(--paper-2);font-family:var(--sans);font-size:.92em}
+.about .btn:first-child{background:var(--cloth);color:var(--cloth-ink);border-color:var(--cloth)}
+.about dl.parts dt{font-family:var(--sans);font-weight:600;margin-top:.5em}
+.about dl.parts dd{margin:0 0 0 1.2em}
+.about h4{margin:1.2em 0 .3em}
+/* карта-дерево */
+.maptree{overflow:auto;max-height:calc(100vh - 210px);border:1px solid var(--rule);border-radius:4px}
+.map .maptree svg{display:block;width:auto;max-width:none;max-height:none}
+.map .maptree text{pointer-events:auto}
+.maptree text{cursor:pointer;fill:var(--ink)} .maptree text:hover{fill:var(--brass)}
+.maptree text.cur{fill:var(--mark-cur);font-weight:700}
+.maptree .l0{stroke:var(--ink);stroke-opacity:.7} .maptree .l1{stroke:var(--ink);stroke-opacity:.5;stroke-dasharray:4 3}
+.maptree .l2{stroke:var(--ink);stroke-opacity:.4;stroke-dasharray:1.5 2.5}
+.ctl .seg a{padding:2px 9px;border:1px solid var(--rule);text-decoration:none;color:var(--ink);font-family:var(--sans);font-size:.9em}
+.ctl .seg a.on{background:var(--cloth);color:var(--cloth-ink)}
+.terms .termidx{font-family:var(--sans);font-size:.88em;color:var(--ink-2);margin:.4em 0 .6em}
+.terms td.ix{font-family:var(--sans);font-size:.85em;color:var(--ink-2);text-align:right}

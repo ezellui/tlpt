@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Логико-философский трактат</title>
+<link rel="stylesheet" href="katex/katex.min.css">
+<link rel="stylesheet" href="css/reader.css">
+</head>
+<body>
+<div id="bar">
+  <button id="navbtn" data-i18n-title="hdr.nav">☰</button>
+  <a class="brand" href="#/" data-i18n="app.short"></a>
+  <div id="qwrap"><input id="q" type="search" data-i18n-placeholder="hdr.search_ph" autocomplete="off" spellcheck="false"></div>
+  <div class="eds" id="eds"></div>
+  <nav id="tabs">
+    <a data-tab="p" href="#/p/1" data-i18n="view.prop"></a>
+    <a data-tab="tree" href="#/tree" data-i18n="view.tree"></a>
+    <a data-tab="seq" href="#/seq" data-i18n="view.seq"></a>
+    <a data-tab="map" href="#/map" data-i18n="view.map"></a>
+    <a data-tab="terms" href="#/terms" data-i18n="view.terms"></a>
+    <a data-tab="work" href="#/work" data-i18n="view.work"></a>
+  </nav>
+  <span class="sp"></span>
+  <button id="cmt" data-i18n="hdr.comments" data-i18n-title="hdr.comments_title"></button>
+  <button id="smaller" data-i18n-title="hdr.smaller">A−</button>
+  <button id="bigger" data-i18n-title="hdr.bigger">A+</button>
+  <button id="theme" data-i18n-title="hdr.theme">◐</button>
+  <a href="#/about" style="color:var(--cloth-ink)" data-i18n="hdr.about"></a>
+  <select id="lang" data-i18n-title="hdr.lang"></select>
+</div>
+<div id="main">
+  <nav id="nav">
+    <div class="top"><input id="filter" type="search" data-i18n-placeholder="nav.filter_ph" autocomplete="off" spellcheck="false">
+      <button id="expall" data-i18n="nav.expand"></button><button id="colall" data-i18n="nav.collapse"></button></div>
+    <div id="tree"></div>
+    <div class="front"><a href="#/front" data-i18n="nav.front"></a><br><a href="#/app" data-i18n="nav.app"></a></div>
+  </nav>
+  <div id="view"><div class="loading">…</div></div>
+</div>
+<div id="pop"></div>
+<div id="toast"></div>
+<div id="seltool"></div>
+
+<!-- библиотеки и словарь интерфейса -->
+<script src="katex/katex.min.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/md.js"></script>
+<!-- данные: манифест редакций и дерево; тексты редакций грузятся по мере надобности (data/ed/*.js) -->
+<script src="js/data.js"></script>
+<script src="data/manifest.js"></script>
+<script src="data/tree.js"></script>
+<script src="data/terms.js"></script>
+<!-- читалка -->
+<script src="js/core.js"></script>
+<script src="js/search.js"></script>
+<script src="js/views.js"></script>
+<script src="js/map.js"></script>
+<script src="js/terms.js"></script>
+<script src="js/work.js"></script>
+<script src="js/apparatus.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
