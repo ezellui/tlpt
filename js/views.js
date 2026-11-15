@@ -54,9 +54,22 @@ function commentsHtml(n, cls) {
     return `<div class="comment${multi ? ' multi' : ''} ${cls || ''}" lang="${D.editions[c.ed].lang}"><div class="ch">${esc(head)}</div>${renderMd(c.text, c.ed)}</div>`;
   }).join('');
 }
-function railList(arr, label, href) {
+function railList(arr, label, href, srcOf) {
   if (!arr || !arr.length) return '';
-  return `<div><h4>${href ? `<a href="${href}" title="${esc(t('list.open'))}">${label}</a>` : label}</h4><ul>${arr.map(n => `<li><a class="no" href="#/p/${n}">${n}</a><span class="tx">${esc(firstLine(n, lead()))}</span></li>`).join('')}</ul></div>`;
+  return `<div><h4>${href ? `<a href="${href}" title="${esc(t('list.open'))}">${label}</a>` : label}</h4><ul>${arr.map(n => `<li><a class="no" href="#/p/${n}">${n}</a><span class="tx">${srcOf ? srcOf(n) : ''}${esc(firstLine(n, lead()))}</span></li>`).join('')}</ul></div>`;
+}
+/* источник ссылки from → to: текст трактата (в каких редакциях) и/или комментаторы; «из диапазона» */
+function refSrc(from, to) {
+  const x = (D.props[from].refsrc || {})[to];
+  if (!x) return '';
+  const tags = [];
+  if (x.t) {
+    const all = EDS.every(e => x.t.includes(e));
+    tags.push(`<span class="rsrc t" title="${esc(all ? t('ref.text_all') : t('ref.text_in', {e: x.t.map(e => D.editions[e].short).join(', ')}))}">${t('ref.text')}${all ? '' : '*'}</span>`);
+  }
+  (x.c || []).forEach(e => tags.push(`<span class="rsrc c" title="${esc(D.editions[e].comment_label || t('prop.comment'))}">${esc({ru2005: t('ref.by_ru2005'), ru1994: t('ref.by_ru1994')}[e] || D.editions[e].short)}</span>`));
+  if (x.range) tags.push(`<span class="rsrc r" title="${esc(t('ref.range_t'))}">${t('ref.range')}</span>`);
+  return tags.join('');
 }
 function colHead() { return `<div class="colhead cols" style="${gridCols(SHOWN.length)}">${SHOWN.map(ed => `<div>${esc(D.editions[ed].title)}</div>`).join('')}</div>`; }
 
@@ -84,8 +97,8 @@ function showProp(n) {
     <div class="rail">
       ${groups ? `<div><h4><a href="#/p/${n}/kids" title="${esc(t('list.open'))}">${t('prop.children')}</a></h4>${groups}</div>` : ''}
       ${railList(sib, t('prop.siblings'), `#/p/${n}/branch`)}
-      ${railList(p.refs, t('prop.refs'), `#/p/${n}/refs`)}
-      ${railList(REFS_IN[n], t('prop.refs_in'), `#/p/${n}/refsin`)}
+      ${railList(p.refs, t('prop.refs'), `#/p/${n}/refs`, x => refSrc(n, x))}
+      ${railList(REFS_IN[n], t('prop.refs_in'), `#/p/${n}/refsin`, x => refSrc(x, n))}
       ${setsOf(n)}
     </div>
     <div class="pager"><span>${prev ? `<a href="#/p/${prev}">← ${prev} ${t('prop.prev')}</a>` : ''}</span>
@@ -125,7 +138,10 @@ function showList(n, kind) {
   head.forEach(x => { h += rowHtml(x, 'rep', false); });
   groups.forEach(([label, g]) => {
     if (label) h += `<div class="gl">${esc(label)}: ${g[0]}${g.length > 1 ? '–' + g[g.length - 1] : ''}</div>`;
-    g.forEach(x => { h += rowHtml(x, x === n && kind === 'branch' ? 'cur' : '', true); });
+    g.forEach(x => {
+      if (kind === 'refs' || kind === 'refsin') h += `<div class="refline">${kind === 'refs' ? `${n} → ${x}` : `${x} → ${n}`} ${kind === 'refs' ? refSrc(n, x) : refSrc(x, n)}</div>`;
+      h += rowHtml(x, x === n && kind === 'branch' ? 'cur' : '', true);
+    });
   });
   view.innerHTML = h + '</div>';
   wireCfBar(); decorate(view);

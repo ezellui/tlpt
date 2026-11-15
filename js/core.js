@@ -38,7 +38,7 @@ function applyStatic() {
 const MANIFEST = TLP.get('manifest'), TREE = TLP.get('tree');
 const D = {editions: {}, props: {}, notes: {}, front: {}, comments: {}, app: {}, figs: {}, figures: TREE.figures};
 MANIFEST.editions.forEach(e => { D.editions[e.id] = e; });
-TREE.nums.forEach(n => { const p = TREE.props[n] || {}; D.props[n] = {parent: p.parent || null, groups: p.groups || [], refs: p.refs || [], text: {}, page: {}}; });
+TREE.nums.forEach(n => { const p = TREE.props[n] || {}; D.props[n] = {parent: p.parent || null, groups: p.groups || [], refs: p.refs || [], refsrc: p.refsrc || {}, text: {}, page: {}}; });
 const EDS = MANIFEST.editions.map(e => e.id);
 const LOADED = new Set();
 
